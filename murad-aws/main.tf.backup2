@@ -1,0 +1,56 @@
+resource "aws_instance" "worker" {
+  ami           = "ami-0aa8fc2422063977a"
+  instance_type = "t2.micro"
+  subnet_id     = "subnet-0960c93de501a19dc"
+  private_ip    = "172.31.32.3"
+
+  user_data = file("userdata/worker.sh")
+
+  tags = {
+    Name = "worker-node"
+  }
+}
+
+resource "aws_instance" "master" {
+  ami           = "ami-0aa8fc2422063977a"
+  instance_type = "t2.micro"
+  subnet_id     = "subnet-0960c93de501a19dc"
+  private_ip    = "172.31.32.2"
+  key_name      = "aws_key"
+  vpc_security_group_ids = [
+    aws_security_group.sg_ssh.id,
+  ]
+
+  depends_on = [
+    aws_instance.worker
+  ]
+
+  user_data = file("userdata/master.sh")
+
+  tags = {
+    Name = "master-node"
+  }
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "aws_key"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO/8R1TIb/J+1/vdnZododnTspqcOzhef2RoGWQB8xTf aziz@terraform-pc"
+}
+
+resource "aws_security_group" "sg_ssh" {
+  vpc_id = "vpc-056e3ecfbd8fbd09c"
+
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+  }
+
+  egress {
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+  }
+}
