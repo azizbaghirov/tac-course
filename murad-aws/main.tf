@@ -1,5 +1,5 @@
 resource "aws_instance" "worker" {
-  #  ami           = "ami-0aa8fc2422063977a"
+  #  ami           = "ami-0aa8fc2422063977a" Red Hat 9 AMI
   ami           = "ami-0446717416821c8c2"
   instance_type = "t2.medium"
 
