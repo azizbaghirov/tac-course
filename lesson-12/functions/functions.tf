@@ -13,4 +13,11 @@ provider "aws" {
   region = "us-east-2"
 }
 
-# Add IAM user resource here and use functions!
+resource "aws_iam_user" "testuser" {
+  name = "testuser"
+  tags = {
+    department = "OPS"
+    time-created = timestamp()
+    time2 = formatdate("MM DD YYYY hh:mm ZZZ", timestamp())
+  }
+}
