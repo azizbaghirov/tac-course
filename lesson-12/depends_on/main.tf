@@ -26,6 +26,8 @@ resource "aws_iam_user" "accounts_3" {
   for_each = toset(["Indigo", "Violet"])
   name = each.key
 
+  depends_on = [ aws_instance.computer_1 ] # Will create or destroy the user account only after the instance
+
   # Add a depends_on meta-argument here and set the dependent resource as the instance.
   # This will force Terraform to wait until the instance is fully build before applying the users.
   

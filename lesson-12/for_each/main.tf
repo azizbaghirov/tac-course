@@ -17,8 +17,19 @@ provider "aws" {
   region = "us-east-2"  
 }
 
-## Add an IAM user resource here using a for_each meta-argument with a toset function.
-## Include four users in the set. Remember to use this syntax ([]) for the toset function.
+resource "aws" "accounts" {
+  for_each = toset(["Samir", "Ceyhun", "Murad", "Zaur"])
+  name = each.key
+
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  tags = {
+    time_created = timestamp()
+    department = "Programmers"
+  } 
+}
 
 
 
