@@ -17,7 +17,7 @@ provider "aws" {
   region = "us-east-2"  
 }
 
-resource "aws" "accounts" {
+resource "aws_iam_user" "accounts" {
   for_each = toset(["Samir", "Ceyhun", "Murad", "Zaur"])
   name = each.key
 
